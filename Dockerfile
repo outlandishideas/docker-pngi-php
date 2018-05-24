@@ -32,7 +32,7 @@ RUN echo "date.timezone=Europe/London" > /usr/local/etc/php/conf.d/zz-custom.ini
 ENV PATH "$PATH:/var/www/html/vendor/bin"
 
 RUN apt-get update \
-    && apt-get install git libpq-dev -y \
+    && apt-get install git zip libpq-dev -y \
     && docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql
 
 RUN apt-get update \
