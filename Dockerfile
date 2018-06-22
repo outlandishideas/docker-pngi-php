@@ -33,7 +33,7 @@ ENV PATH "$PATH:/var/www/html/vendor/bin"
 
 RUN apt-get update \
     && apt-get install git zip libpq-dev -y \
-    && docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql
+    && docker-php-ext-install intl mysqli pdo pdo_mysql pdo_pgsql pgsql
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
