@@ -30,9 +30,9 @@ RUN echo "date.timezone=Europe/London" > /usr/local/etc/php/conf.d/zz-custom.ini
     && echo "session.autostart=0" >> /usr/local/etc/php/conf.d/zz-custom.ini
 
 ENV PATH "$PATH:/var/www/html/vendor/bin"
-
 RUN apt-get update \
-    && apt-get install git zip libpq-dev -y \
+    && apt-get install git zip libpq-dev zlib1g-dev libicu-dev g++ -y \
+    && docker-php-ext-configure intl \
     && docker-php-ext-install intl mysqli pdo pdo_mysql pdo_pgsql pgsql
 
 RUN apt-get update \
