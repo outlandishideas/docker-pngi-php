@@ -1,9 +1,6 @@
-FROM php:7.1-fpm
+FROM php:7.2-fpm
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
-    php -r "unlink('composer-setup.php');"
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN curl -OL https://github.com/phpmetrics/PhpMetrics/releases/download/v2.3.2/phpmetrics.phar && \
     chmod +x phpmetrics.phar && \
@@ -33,23 +30,23 @@ ENV PATH "$PATH:/var/www/html/vendor/bin"
 RUN apt-get update \
     && apt-get install git zip libpq-dev zlib1g-dev libicu-dev g++ -y \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install intl mysqli pdo pdo_mysql pdo_pgsql pgsql
+    && docker-php-ext-install intl mysqli pdo pdo_mysql pdo_pgsql pgsql sockets
 
 RUN apt-get update \
-	&& apt-get install -y --no-install-recommends \
-		ed \
-		less \
-		locales \
-		vim-tiny \
-		wget \
-		ca-certificates \
-		fonts-texgyre \
-	&& rm -rf /var/lib/apt/lists/*
+        && apt-get install -y --no-install-recommends \
+                ed \
+                less \
+                locales \
+                vim-tiny \
+                wget \
+                ca-certificates \
+                fonts-texgyre \
+        && rm -rf /var/lib/apt/lists/*
 
 ## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
-	&& locale-gen en_US.utf8 \
-	&& /usr/sbin/update-locale LANG=en_US.UTF-8
+        && locale-gen en_US.utf8 \
+        && /usr/sbin/update-locale LANG=en_US.UTF-8
 
 RUN apt-get update && apt-get install zip
 
