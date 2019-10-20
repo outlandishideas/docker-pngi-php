@@ -43,6 +43,15 @@ RUN apt-get update \
                 fonts-texgyre \
         && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        imagemagick libmagickwand-dev poppler-utils ghostscript $PHPIZE_DEPS \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && apt-get remove -y libmagickwand-dev $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
+
+
 ## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
         && locale-gen en_US.utf8 \
